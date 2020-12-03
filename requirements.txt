@@ -1,0 +1,12 @@
+csv
+internetarchive
+moviepy
+nltk
+pickle
+pydub
+pyloudnorm
+pyttsx3
+random
+scenedetect[opencv]
+soundfile
+statistics
