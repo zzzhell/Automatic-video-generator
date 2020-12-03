@@ -4,4 +4,4 @@ This project automatically generates a video with music and synthetic voiceover.
 
 The output_examples folder contains output video examples. The files are named after the search terms in the following format: 'video_search_phrase-voiceover_keyword-soundtrack_keyword'.
 
-The corpus for the voiceover text search can be downloaded here: https://rismc.blob.core.windows.net/rismc/sentences.pickle
+The corpus for the voiceover text search can be downloaded here (162 MB): https://rismc.blob.core.windows.net/rismc/sentences.pickle
