@@ -20,7 +20,7 @@ def check(list_, val): # For checking content values and number of scenes
             return False
     return True
 
-# Content analysis using PySceneDetect
+# Content analysis (PySceneDetect)
 
 def find_stats(video_path):
     # type: (str) -> List[Tuple[FrameTimecode, FrameTimecode]]
@@ -77,15 +77,12 @@ def find_stats(video_path):
 
     return tc_frame_list #
 
-# Get timecodes and content values from .csv
+# Get timecodes and content values from .csv (Steinar)
 
 def tc_from_csv(video_path, scene_list_frames, num_clips):
     
     with open('{0}.stats.csv'.format(video_path), newline='') as statsf:
         reader = csv.reader(statsf)
-        #framerate = [row.split()[0] for row in statsf]
-        #dreader = csv.DictReader(statsf)
-        #framerate = float(dreader.fieldnames[1])
         next(reader)
         headers = next(reader)
         # Transpose the data --> columns become rows and rows become columns
@@ -101,15 +98,18 @@ def tc_from_csv(video_path, scene_list_frames, num_clips):
     for k in entries_to_remove:
         content_dict.pop(k, None)
     
+    # Content values from dictionary to list
+    
     content_val = list(map(float, content_dict['content_val']))
-    # content_tc = list(list(content_dict['Timecode']))
     
     print('\nFinding scenes with highest average HSL values...\n', flush=True)
+
+    # Use scene indices to find average content values per scene using list comprehension
     
     cont_val_periods = [content_val[i:j] for i, j in zip([0]+scene_list_frames, scene_list_frames+[None])]
     cont_val_periods.pop(0)
     cont_val_periods.pop(-1)
-    
+        
     cont_period_avgs = [float(sum(row)/len(row)) for row in cont_val_periods]
     
     cont_candidates = sorted([(x,i) for (i,x) in enumerate(cont_period_avgs)], reverse=True) [:num_clips]
@@ -128,3 +128,21 @@ def tc_from_csv(video_path, scene_list_frames, num_clips):
         os.remove('{0}.stats.csv'.format(video_path))
   
     return cont_candidate_in, cont_candidate_out, framerate, cont_candidate_vals
+
+# Convert timecode to the format MoviePy wants
+
+def moviepy_tc(cont_candidate_in, cont_candidate_out, framerate):
+
+    mp_tc_in = []
+    mp_tc_out = []
+
+    for frames in cont_candidate_in:
+        frames = frames/framerate
+        mp_tc_in.append(round(frames, 2))
+        
+    for frames in cont_candidate_out:
+        frames = frames/framerate
+        frames = frames-1 # Compensate for drop frames
+        mp_tc_out.append(round(frames, 2))
+    
+    return mp_tc_in, mp_tc_out

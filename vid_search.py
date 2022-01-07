@@ -15,14 +15,14 @@ def get_filenames(video_search_keyword, number_of_videos):
     search_results = []
     num_of_items = 50
     
-    #, "formats":"h.264"
-    
     # for i in tqdm(range(num_of_items)):
     for item in search_items('{0} AND mediatype:movies \
                                  AND NOT access-restricted-item:true \
                                  AND NOT funny_or_die \
                                  AND NOT g4tv.com \
                                  AND NOT epicmealtime \
+                                 AND NOT Rev3_Best_Of \
+                                 AND NOT cnnmoney \
                                  AND item_size:[30000000 TO 70000000]'
                                  .format(video_search_keyword), params={"page":"1","rows":num_of_items}):
         search_results.append(item)
